@@ -1,16 +1,27 @@
 package com.yuriytkach.jitc.solid;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import com.yuriytkach.jitc.solid.fileHandler.FileHandler;
+import com.yuriytkach.jitc.solid.fileHandler.PdfHandler;
+import com.yuriytkach.jitc.solid.fileHandler.TxtHandler;
+import com.yuriytkach.jitc.solid.fileHandler.WordHandler;
+
+import java.util.List;
 
 public class FileDownloader {
 
-  public String downloadFileContent(final String filePath) {
-    try {
-      return new String(Files.readAllBytes(Path.of(filePath)));
-    } catch (final IOException ex) {
-      throw new IllegalArgumentException("Cannot read file " + filePath + ": " + ex.getMessage(), ex);
+    //  DI
+    private final List<FileHandler> handlers = List.of(new PdfHandler(), new TxtHandler(), new WordHandler());
+
+    public String downloadFileContent(final List<String> filePath) {
+        for (String path : filePath) {
+            for (FileHandler fileHandler : handlers) {
+                if (fileHandler.isApplicable(path)) {
+                    return fileHandler.handle(path);
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot read any file : " + filePath);
     }
-  }
+
 }

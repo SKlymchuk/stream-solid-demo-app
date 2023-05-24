@@ -2,6 +2,8 @@ package com.yuriytkach.jitc.solid;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class FileProcessor {
 
@@ -12,7 +14,7 @@ public class FileProcessor {
   private final TextFileAnalyzer textFileAnalyzer;
 
   public long processLatestTextFile(final String wordToCount) {
-    final String latestFileKey = fileFinder.findLatestTextFile();
+    final List<String> latestFileKey = fileFinder.findLatestTextFile();
     final String latestFileContent = fileDownloader.downloadFileContent(latestFileKey);
     return textFileAnalyzer.countWordOccurrences(latestFileContent, wordToCount);
   }
